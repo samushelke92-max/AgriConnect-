@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriConnect Project — Farmer Support Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#1F3B2C;
+    --forest-2:#16291F;
+    --leaf:#4C7A3D;
+    --leaf-light:#DCE8D3;
+    --gold:#E0A72E;
+    --gold-dark:#B5811C;
+    --soil:#7A4B28;
+    --cream:#F3F1E4;
+    --card:#FFFDF7;
+    --ink:#22301F;
+    --ink-soft:#5B6B54;
+    --line:#D8D3BF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{font-family:'Fraunces',serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:inherit; cursor:pointer;}
+
+  /* ===== Top identity bar ===== */
+  .topbar{
+    background:var(--forest-2);
+    color:var(--cream);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    letter-spacing:.04em;
+    padding:7px 28px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .topbar span{opacity:.75;}
+  .season-ribbon{display:flex; gap:14px;}
+  .season-ribbon b{color:var(--gold); font-weight:500;}
+  /* ===== Google Translate ===== */
+  .language-switcher{display:flex;align-items:center;gap:7px;}
+  .language-switcher .lang-label{color:#CFE0C6;font-size:11px;white-space:nowrap;}
+  #google_translate_element{min-height:30px;}
+  #google_translate_element .goog-te-gadget{font-family:'Inter',sans-serif;font-size:0;}
+  #google_translate_element .goog-te-gadget-simple{
+    background:#fff;border:1px solid rgba(255,255,255,.25);border-radius:4px;
+    padding:5px 8px;line-height:20px;display:inline-flex;align-items:center;
+  }
+  #google_translate_element .goog-te-gadget-simple img{display:none;}
+  #google_translate_element .goog-te-gadget-simple span{font-size:12px;color:var(--forest-2);border:0;}
+  @media(max-width:700px){
+    .language-switcher{width:100%;justify-content:flex-end;}
+    .topbar{padding:7px 14px;}
+  }
+
+  /* ===== Nav ===== */
+  header.main{
+    background:var(--forest);
+    padding:0 28px;
+    position:sticky; top:0; z-index:50;
+    box-shadow:0 2px 14px rgba(0,0,0,.15);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    height:66px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--cream); font-family:'Fraunces',serif; font-weight:600; font-size:21px;
+    cursor:pointer;
+  }
+  .brand .mark{
+    width:30px; height:30px; border-radius:3px;
+    background:linear-gradient(160deg,var(--gold),var(--leaf));
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px;
+  }
+  nav.tabs{display:flex; gap:2px; height:100%;}
+  nav.tabs button{
+    background:none; border:none; color:#CFE0C6;
+    font-size:14px; font-weight:500; padding:0 16px;
+    height:66px; position:relative;
+    border-bottom:3px solid transparent;
+    transition:.15s;
+  }
+  nav.tabs button:hover{color:#fff;}
+  nav.tabs button.active{color:#fff; border-bottom-color:var(--gold);}
+  .hamburger{display:none; background:none; border:none; color:#fff; font-size:22px;}
+
+  main{max-width:1180px; margin:0 auto; padding:44px 28px 90px;}
+  .page{display:none; animation:fade .35s ease;}
+  .page.active{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+
+  /* ===== Hero ===== */
+  .hero{
+    display:grid; grid-template-columns:1.15fr .85fr; gap:48px;
+    align-items:center; padding:20px 0 56px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--soil); margin-bottom:14px; display:block;
+  }
+  .hero h1{font-size:44px; font-weight:600; line-height:1.08; color:var(--forest-2); margin-bottom:18px;}
+  .hero h1 em{font-style:italic; color:var(--leaf); font-weight:500;}
+  .hero p{color:var(--ink-soft); font-size:16px; max-width:46ch; margin-bottom:26px;}
+  .hero-actions{display:flex; gap:12px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 22px; border-radius:3px; font-weight:600; font-size:14px;
+    border:1.5px solid transparent; transition:.15s;
+  }
+  .btn-primary{background:var(--forest); color:#fff;}
+  .btn-primary:hover{background:var(--forest-2);}
+  .btn-ghost{border-color:var(--forest); color:var(--forest);}
+  .btn-ghost:hover{background:var(--forest); color:#fff;}
+
+  .field-plot{
+    aspect-ratio:1/0.85; border-radius:6px; overflow:hidden; position:relative;
+    background:
+      repeating-linear-gradient(180deg,#5C8B47 0 26px, #4C7A3D 26px 52px);
+    box-shadow:0 18px 40px rgba(31,59,44,.28);
+  }
+  .field-plot::before{
+    content:"";position:absolute; inset:0;
+    background:repeating-linear-gradient(90deg, rgba(0,0,0,.06) 0 3px, transparent 3px 34px);
+  }
+  .field-plot .tag{
+    position:absolute; bottom:16px; left:16px; background:rgba(22,41,31,.85);
+    color:#fff; font-family:'IBM Plex Mono',monospace; font-size:11px;
+    padding:8px 12px; border-radius:3px; line-height:1.5;
+  }
+  .field-plot .tag b{color:var(--gold); display:block; font-size:13px;}
+
+  /* Quick access */
+  .quick-access{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:44px 0;}
+  .qa-btn{
+    background:var(--card); border:1px solid var(--line); border-radius:6px;
+    padding:20px 16px; text-align:left; transition:.15s;
+  }
+  .qa-btn:hover{border-color:var(--leaf); transform:translateY(-2px); box-shadow:0 8px 18px rgba(31,59,44,.1);}
+  .qa-btn .ic{font-size:22px; margin-bottom:10px; display:block;}
+  .qa-btn .t{font-weight:600; font-size:14.5px; color:var(--forest-2); display:block; margin-bottom:2px;}
+  .qa-btn .d{font-size:12.5px; color:var(--ink-soft);}
+
+  .section-head{display:flex; justify-content:space-between; align-items:flex-end; margin:56px 0 22px;}
+  .section-head h2{font-size:26px; color:var(--forest-2); font-weight:600;}
+  .section-head .sub{color:var(--ink-soft); font-size:13.5px; margin-top:4px;}
+
+  /* News strip */
+  .news-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  .news-card{background:var(--card); border:1px solid var(--line); border-radius:6px; padding:18px; border-left:3px solid var(--gold);}
+  .news-card .date{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--soil); margin-bottom:8px;}
+  .news-card h3{font-size:15px; font-weight:600; margin-bottom:6px; color:var(--forest-2);}
+  .news-card p{font-size:13px; color:var(--ink-soft);}
+
+  .news-live-status{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:10.5px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace}
+  .news-live-status .dot{width:7px;height:7px;border-radius:50%;background:#2f7d32}
+  .news-live-status.loading .dot{background:var(--gold)}
+
+  /* ===== Latest agricultural news ===== */
+  .news-card{position:relative;}
+  .news-card .source{
+    display:inline-flex;align-items:center;gap:5px;
+    margin-top:11px;font-size:11px;font-weight:700;color:var(--forest);
+    text-decoration:none;border-bottom:1px dotted var(--forest);
+  }
+  .news-card .source:hover{color:var(--soil);}
+  .news-badge{
+    display:inline-block;margin-left:6px;padding:3px 7px;border-radius:12px;
+    background:var(--leaf-light);color:var(--forest-2);font-size:9px;
+    font-weight:800;letter-spacing:.4px;
+  }
+  .news-tools{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    margin-top:10px;flex-wrap:wrap;
+  }
+  .trusted-sources{
+    display:flex;gap:7px;flex-wrap:wrap;margin-top:14px;
+  }
+  .trusted-source{
+    padding:6px 9px;border:1px solid var(--line);border-radius:3px;
+    background:#fff;color:var(--forest-2);font-size:10.5px;font-weight:700;
+    text-decoration:none;
+  }
+  .trusted-source:hover{background:var(--leaf-light);}
+  .news-note{font-size:11px;color:var(--ink-soft);margin-top:10px;}
+
+  /* ===== Crops grid ===== */
+  .toolbar{display:flex; gap:10px; margin-bottom:24px; flex-wrap:wrap;}
+  .toolbar input, .toolbar select{
+    padding:10px 14px; border:1px solid var(--line); border-radius:3px;
+    background:var(--card); font-size:13.5px; font-family:inherit;
+  }
+  .toolbar input{flex:1; min-width:180px;}
+  .crop-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:14px;}
+  .crop-card{
+    background:var(--card); border:1px solid var(--line); border-radius:6px;
+    overflow:hidden; cursor:pointer; transition:.15s;
+  }
+  .crop-card:hover{transform:translateY(-3px); box-shadow:0 10px 22px rgba(31,59,44,.12); border-color:var(--leaf);}
+  .crop-swatch{height:70px; display:flex; align-items:center; justify-content:center; font-size:30px;}
+  .crop-card .body{padding:14px;}
+  .crop-card h3{font-size:14.5px; color:var(--forest-2); margin-bottom:4px;}
+  .crop-card .season-tag{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--soil);
+    background:var(--leaf-light); display:inline-block; padding:2px 7px; border-radius:2px;
+  }
+
+  /* Modal */
+  .modal-bg{
+    display:none; position:fixed; inset:0; background:rgba(22,41,31,.55);
+    z-index:100; align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-bg.active{display:flex;}
+  .modal{
+    background:var(--card); border-radius:8px; max-width:760px; width:100%;
+    padding:30px; position:relative;
+  }
+  .modal .close{position:absolute; top:16px; right:18px; background:none; border:none; font-size:20px; color:var(--ink-soft);}
+  .modal .swatch{width:52px; height:52px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:16px;}
+  .modal h3{font-size:22px; color:var(--forest-2); margin-bottom:6px;}
+  .modal .season-tag{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--soil); background:var(--leaf-light); padding:3px 8px; border-radius:2px;}
+  .modal p{margin-top:14px; font-size:13.5px; color:var(--ink-soft);}
+  .modal .tips{margin-top:16px; padding-top:16px; border-top:1px solid var(--line);}
+  .modal .tips b{font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--soil);}
+  .modal .tips p{margin-top:6px;}
+
+  /* Crop videos */
+  .crop-videos{
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px solid var(--line);
+  }
+  .crop-videos h4{
+    font-family:'Fraunces',serif;
+    font-size:17px;
+    color:var(--forest-2);
+    margin-bottom:10px;
+  }
+  .video-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+  }
+  .video-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:5px;
+    overflow:hidden;
+  }
+  .video-thumb{
+    aspect-ratio:16/9;
+    background:linear-gradient(135deg,var(--forest),var(--leaf));
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+  }
+  .video-card .video-body{padding:10px;}
+  .video-card b{
+    display:block;
+    font-size:12px;
+    color:var(--forest-2);
+    margin-bottom:7px;
+  }
+  .video-card a{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    color:var(--soil);
+    text-decoration:none;
+  }
+  .video-card a:hover{text-decoration:underline;}
+
+  /* ===== Schemes ===== */
+  .scheme-list{display:flex; flex-direction:column; gap:12px;}
+  .scheme-card{
+    background:var(--card); border:1px solid var(--line); border-radius:6px;
+    padding:20px 22px; display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center;
+  }
+  .scheme-card h3{font-size:16px; color:var(--forest-2); margin-bottom:5px;}
+  .scheme-card p{font-size:13px; color:var(--ink-soft); margin-bottom:8px;}
+  .scheme-meta{display:flex; gap:16px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--soil);}
+  .scheme-card .state-badge{
+    background:var(--forest); color:#fff; font-size:11px; padding:5px 11px;
+    border-radius:20px; white-space:nowrap; height:fit-content;
+  }
+  .scheme-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .scheme-link{
+    display:inline-flex;align-items:center;gap:5px;padding:7px 11px;
+    border-radius:3px;background:var(--forest);color:#fff;text-decoration:none;
+    font-size:11.5px;font-weight:700;
+  }
+
+  /* ===== Consultation ===== */
+  .consult-grid{display:grid; grid-template-columns:1fr 1fr; gap:36px;}
+  .form-card{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:28px;}
+  .form-card h3{font-size:18px; color:var(--forest-2); margin-bottom:18px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:12.5px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;}
+  .field input, .field select{
+    width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:3px;
+    background:#fff; font-size:14px; font-family:inherit;
+  }
+  .experts{display:flex; flex-direction:column; gap:10px;}
+  .expert-row{
+    display:flex; align-items:center; gap:12px; background:var(--card);
+    border:1px solid var(--line); border-radius:6px; padding:12px 14px;
+  }
+  .avatar{width:38px; height:38px; border-radius:50%; background:var(--leaf); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:600; font-size:14px;}
+  .expert-row .info b{font-size:13.5px; display:block; color:var(--forest-2);}
+  .expert-row .info span{font-size:12px; color:var(--ink-soft);}
+  .meeting-list{margin-top:16px; display:flex; flex-direction:column; gap:10px;}
+  .meeting-item{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:12px 14px; background:var(--leaf-light); border-radius:6px; font-size:13px;
+  }
+  .meeting-item .join{background:var(--gold); color:var(--forest-2); border:none; padding:7px 13px; border-radius:3px; font-size:12px; font-weight:600;}
+
+  .status-active{color:#2f7d32;font-weight:700;}
+  .status-inactive{color:#B23B3B;font-weight:700;}
+  .admin-small-btn{
+    background:var(--leaf-light);color:var(--forest-2);border:1px solid var(--line);
+    padding:6px 9px;border-radius:3px;font-size:11px;font-weight:700;margin-right:5px;
+  }
+
+  /* Consultant live sessions */
+  .live-session-list{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+  .empty-session{padding:16px;background:var(--leaf-light);border-radius:6px;color:var(--ink-soft);font-size:13px;}
+
+  /* ===== Auth & Profile ===== */
+  .auth-wrap{display:flex; justify-content:center; padding:20px 0;}
+  .auth-card{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:36px; width:100%; max-width:440px;}
+  .auth-toggle{display:flex; background:var(--leaf-light); border-radius:6px; padding:4px; margin-bottom:24px;}
+  .auth-toggle button{flex:1; background:none; border:none; padding:9px; border-radius:4px; font-size:13.5px; font-weight:600; color:var(--ink-soft);}
+  .auth-toggle button.active{background:var(--forest); color:#fff;}
+  .auth-form{display:none;}
+  .auth-form.active{display:block;}
+
+  /* Personalised Profile Styling */
+  .profile-container{
+    max-width:960px; margin:0 auto; display:grid; grid-template-columns:300px 1fr; gap:24px;
+  }
+  .profile-sidebar{
+    background:var(--card); border:1px solid var(--line); border-radius:8px; padding:28px 20px; text-align:center;
+  }
+  .profile-avatar-large{
+    width:84px; height:84px; border-radius:50%; background:linear-gradient(135deg, var(--forest), var(--leaf));
+    color:#fff; font-family:'Fraunces',serif; font-size:36px; display:flex; align-items:center;
+    justify-content:center; margin:0 auto 16px; box-shadow:0 6px 16px rgba(0,0,0,.1);
+  }
+  .profile-name{font-size:20px; color:var(--forest-2); font-weight:700;}
+  .profile-badge{
+    display:inline-block; background:var(--leaf-light); color:var(--forest-2); font-size:11px;
+    font-weight:700; padding:3px 10px; border-radius:12px; margin:6px 0 16px; text-transform:uppercase; letter-spacing:0.5px;
+  }
+  .profile-details-list{text-align:left; font-size:13px; border-top:1px solid var(--line); padding-top:16px; margin-top:16px;}
+  .profile-detail-item{margin-bottom:10px; display:flex; flex-direction:column;}
+  .profile-detail-item span{font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.04em;}
+  .profile-detail-item b{color:var(--forest-2); font-weight:600;}
+
+  .profile-main-content{display:flex; flex-direction:column; gap:20px;}
+  .profile-card-box{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:22px;}
+  .profile-card-box h3{font-size:17px; color:var(--forest-2); margin-bottom:14px; display:flex; align-items:center; gap:8px;}
+  .profile-stats-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+  .p-stat-item{background:var(--leaf-light); padding:14px; border-radius:6px; text-align:center;}
+  .p-stat-item b{font-size:22px; color:var(--forest-2); font-family:'Fraunces',serif; display:block;}
+  .p-stat-item span{font-size:11px; color:var(--ink-soft); text-transform:uppercase; font-weight:600;}
+
+  .profile-actions-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px;}
+  .p-act-btn{
+    display:flex; align-items:center; gap:12px; padding:14px; background:#fff; border:1px solid var(--line);
+    border-radius:6px; text-decoration:none; color:var(--forest-2); font-weight:600; font-size:13.5px; transition:.15s;
+  }
+  .p-act-btn:hover{border-color:var(--leaf); background:var(--cream); transform:translateY(-2px);}
+  .p-act-btn .icon{font-size:20px;}
+
+  /* ===== Admin ===== */
+  .admin-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:34px;}
+  .stat-card{background:var(--forest); color:#fff; border-radius:8px; padding:20px;}
+  .stat-card b{font-family:'Fraunces',serif; font-size:30px; display:block;}
+  .stat-card span{font-size:12px; opacity:.75;}
+  .admin-panel{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:24px; margin-bottom:24px;}
+  .admin-panel h3{font-size:16px; color:var(--forest-2); margin-bottom:16px;}
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:10.5px; text-transform:uppercase; color:var(--soil); padding:8px 10px; border-bottom:1.5px solid var(--line);}
+  td{padding:10px; border-bottom:1px solid var(--line); color:var(--ink);}
+  .row-actions button{background:none; border:none; font-size:13px; margin-right:8px;}
+  .del{color:#B23B3B;}
+  .admin-add{display:flex; gap:8px; margin-bottom:16px;}
+  .admin-add input{flex:1; padding:9px 12px; border:1px solid var(--line); border-radius:3px; font-size:13px;}
+  .admin-add button{background:var(--leaf); color:#fff; border:none; padding:9px 16px; border-radius:3px; font-size:13px; font-weight:600;}
+
+  footer{background:var(--forest-2); color:#CFE0C6; margin-top:60px; padding:36px 28px; font-size:12.5px;}
+  .footer-inner{max-width:1180px; margin:0 auto; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--forest-2); color:#fff; padding:13px 22px; border-radius:6px;
+    font-size:13.5px; opacity:0; pointer-events:none; transition:.25s; z-index:200;
+    display:flex; align-items:center; gap:8px;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  @media(max-width:900px){
+    nav.tabs{display:none;}
+    .hamburger{display:block;}
+    .hero{grid-template-columns:1fr;}
+    .quick-access, .crop-grid{grid-template-columns:repeat(2,1fr);}
+    .consult-grid{grid-template-columns:1fr;}
+    .admin-stats{grid-template-columns:repeat(2,1fr);}
+    .news-strip{grid-template-columns:1fr;}
+    .video-grid{grid-template-columns:1fr;}
+    .profile-container{grid-template-columns:1fr;}
+  }
+
+  /* ===== Farmer Buyer ===== */
+  .buyer-intro{background:var(--forest);color:#fff;border-radius:8px;padding:26px 28px;margin-bottom:24px;}
+  .buyer-intro h2{font-size:28px;margin-bottom:7px;color:#fff;}
+  .buyer-intro p{font-size:13.5px;color:#DCE8D3;max-width:75ch;}
+  .buyer-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
+  .buyer-card{background:var(--card);border:1px solid var(--line);border-radius:7px;padding:20px;}
+  .buyer-card h3{font-size:17px;color:var(--forest-2);margin-bottom:14px;}
+  .buyer-card .field{margin-bottom:12px;}
+  .buyer-card select,.buyer-card input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:3px;background:#fff;font:inherit;font-size:13px;}
+  .pest-table-wrap{overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:7px;}
+  .pest-table{min-width:760px;}
+  .pest-table th{background:var(--leaf-light);}
+  .pest-tag{display:inline-block;padding:3px 7px;border-radius:12px;background:#F8E8C5;color:var(--soil);font-size:10px;font-weight:700;}
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
+  .price-card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:15px;}
+  .price-card h4{font-family:'Fraunces',serif;font-size:16px;color:var(--forest-2);margin-bottom:4px;}
+  .price-card .active{font-size:11px;color:var(--ink-soft);margin-bottom:10px;}
+  .seller-row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-top:1px solid var(--line);font-size:12px;}
+  .seller-row b{color:var(--forest-2);}
+  .best-price{color:#2f7d32;font-weight:800;}
+  .buyer-note{font-size:11px;color:var(--ink-soft);margin-top:12px;padding:10px;background:var(--leaf-light);border-radius:4px;}
+  @media(max-width:900px){.buyer-grid{grid-template-columns:1fr;}.price-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:600px){.price-grid{grid-template-columns:1fr;}}
+
+  .buyer-affiliate-box{margin:22px 0;padding:22px;border:1px solid #d9e8dc;border-radius:16px;background:linear-gradient(135deg,#f7fff8,#fffdf5);box-shadow:0 6px 18px rgba(0,0,0,.05)}
+  .buyer-affiliate-box h3{margin:0 0 8px}
+  .buyer-affiliate-box p{margin:0 0 14px;color:#52615a}
+  .affiliate-actions{display:flex;gap:12px;flex-wrap:wrap}
+  .affiliate-btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700;color:#fff;min-width:190px}
+  .amazon-btn{background:#ff9900}
+  .flipkart-btn{background:#2874f0}
+  .buyer-affiliate-box small{display:block;margin-top:12px;color:#68736e;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span>AgriConnect Demo · IT Department Project</span>
+  <div class="season-ribbon">
+    <span>Kharif</span><span>Rabi</span><span><b>● Zaid — current</b></span>
+    <div class="language-switcher" aria-label="Language selector">
+      <span class="lang-label">🌐 Language</span>
+      <div id="google_translate_element"></div>
+    </div>
+  </div>
+</div>
+
+<header class="main">
+  <div class="nav-inner">
+    <div class="brand" onclick="showPage(currentUser ? 'home' : 'auth')"><span class="mark">🌾</span> AgriConnect</div>
+    <nav class="tabs">
+      <button data-page="home">Home</button>
+      <button data-page="crops">Crops</button>
+      <button data-page="farmerBuyer">Farmer Buyer</button>
+      <button data-page="schemes">Govt Schemes</button>
+      <button data-page="consult">Consultation</button>
+      <button data-page="auth" id="navAuthTab" class="active">Login</button>
+      <button data-page="admin">Admin</button>
+    </nav>
+    <button class="hamburger" onclick="toggleMobileNav()">☰</button>
+  </div>
+</header>
+
+<!-- mobile nav -->
+<div id="mobileNav" style="display:none; background:var(--forest-2); flex-direction:column;">
+  <button onclick="showPage('home')" style="color:#fff;padding:14px;background:none;border:none;text-align:left;">Home</button>
+  <button onclick="showPage('crops')" style="color:#fff;padding:14px;background:none;border:none;text-align:left;">Crops</button>
+  <button onclick="showPage('farmerBuyer')" style="color:#fff;padding:14px;background:none;border:none;text-align:left;">Farmer Buyer</button>
+  <button onclick="showPage('schemes')" style="color:#fff;padding:14px;background:none;border:none;text-align:left;">Govt Schemes</button>
+  <button onclick="showPage('consult')" style="color:#fff;padding:14px;background:none;border:none;text-align:left;">Consultation</button>
+  <button onclick="showPage('auth')" id="mobileNavAuthTab" style="color:#fff;padding:14px;background:none;border:none;text-align:left;">Login</button>
+  <button onclick="showPage('admin')" style="color:#fff;padding:14px;background:none;border:none;text-align:left;">Admin</button>
+</div>
+
+<main>
+
+  <!-- ============ AUTH & PROFILE (LANDING DEFAULT) ============ -->
+  <section class="page active" id="auth">
+    <div id="loggedOutView" class="auth-wrap">
+      <div class="auth-card" id="authCardArea">
+        <div class="auth-toggle">
+          <button class="active" onclick="setAuthTab('login')">Login</button>
+          <button onclick="setAuthTab('register')">Register</button>
+        </div>
+        <form class="auth-form active" id="loginForm" onsubmit="doLogin(event)">
+          <div class="field"><label>Mobile number or Email</label><input required id="loginId" placeholder="e.g. 9876543210 or user@agri.in"></div>
+          <div class="field"><label>Password</label><input required id="loginPass" type="password" placeholder="••••••••"></div>
+          <button class="btn btn-primary" style="width:100%; justify-content:center;" type="submit">Login to AgriConnect</button>
+        </form>
+        <form class="auth-form" id="registerForm" onsubmit="doRegister(event)">
+          <div class="field"><label>Full Name</label><input required id="regName" placeholder="e.g. Ramesh Patil"></div>
+          <div class="field"><label>Mobile Number</label><input required id="regMobile" placeholder="9876543210"></div>
+          <div class="field"><label>Email Address</label><input required type="email" id="regEmail" placeholder="ramesh@example.com"></div>
+          <div class="field"><label>Role / Category</label>
+            <select id="regRole" style="width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:3px;">
+              <option value="Farmer">Farmer</option>
+              <option value="Buyer / Trader">Buyer / Trader</option>
+              <option value="Agronomist / Expert">Agronomist / Expert</option>
+            </select>
+          </div>
+          <div class="field"><label>Password</label><input required type="password" id="regPass" placeholder="Create a password"></div>
+          <button class="btn btn-primary" style="width:100%; justify-content:center;" type="submit">Create Account</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Personalised Profile View (Rendered when user is logged in) -->
+    <div id="loggedInView" style="display:none;">
+      <div class="profile-container">
+        <!-- Profile Left Sidebar -->
+        <div class="profile-sidebar">
+          <div class="profile-avatar-large" id="pAvatar">U</div>
+          <div class="profile-name" id="pName">User Name</div>
+          <div class="profile-badge" id="pRole">Farmer</div>
+          
+          <div class="profile-details-list">
+            <div class="profile-detail-item">
+              <span>Mobile Number</span>
+              <b id="pMobile">9876543210</b>
+            </div>
+            <div class="profile-detail-item">
+              <span>Email Address</span>
+              <b id="pEmail">user@agri.in</b>
+            </div>
+            <div class="profile-detail-item">
+              <span>Registered Location</span>
+              <b>Maharashtra, India</b>
+            </div>
+            <div class="profile-detail-item">
+              <span>Account Status</span>
+              <b style="color:#2f7d32;">Verified Member</b>
+            </div>
+          </div>
+
+          <button class="btn btn-ghost" style="width:100%; justify-content:center; margin-top:20px; border-color:#B23B3B; color:#B23B3B;" onclick="logout()">
+            🚪 Log Out
+          </button>
+        </div>
+
+        <!-- Profile Main Dashboard -->
+        <div class="profile-main-content">
+          <div class="profile-card-box">
+            <h3>📊 Dashboard Overview</h3>
+            <div class="profile-stats-grid">
+              <div class="p-stat-item">
+                <b id="pStatConsults">0</b>
+                <span>Booked Consults</span>
+              </div>
+              <div class="p-stat-item">
+                <b>10</b>
+                <span>Saved Crops</span>
+              </div>
+              <div class="p-stat-item">
+                <b>8</b>
+                <span>Eligible Schemes</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-card-box">
+            <h3>🚀 Quick Navigation Shortcuts</h3>
+            <div class="profile-actions-grid">
+              <a href="#" class="p-act-btn" onclick="showPage('crops')">
+                <span class="icon">🌱</span> Explore Crop Guide
+              </a>
+              <a href="#" class="p-act-btn" onclick="showPage('farmerBuyer')">
+                <span class="icon">🛒</span> Farmer Buyer Prices
+              </a>
+              <a href="#" class="p-act-btn" onclick="showPage('schemes')">
+                <span class="icon">🏛️</span> View Govt Schemes
+              </a>
+              <a href="#" class="p-act-btn" onclick="showPage('consult')">
+                <span class="icon">🎥</span> Book Consultation
+              </a>
+            </div>
+          </div>
+
+          <div class="profile-card-box">
+            <h3>📅 My Booked Consultations</h3>
+            <div id="pMeetingsList" class="meeting-list">
+              <p style="font-size:13px; color:var(--ink-soft);">No consultations booked yet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOME ============ -->
+  <section class="page" id="home">
+    <div class="hero">
+      <div>
+        <span class="eyebrow">Dynamic Agriculture Platform</span>
+        <h1>One ledger for <em>every</em> field, farmer & scheme.</h1>
+        <p>AgriConnect brings crop guidance, verified government schemes, and live expert consultations onto a single secure platform — built for India's farmers, students, and officers.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="showPage('crops')">Browse Crop Guide</button>
+          <button class="btn btn-ghost" onclick="showPage('schemes')">Explore Govt Schemes</button>
+        </div>
+      </div>
+      <div class="field-plot">
+        <div class="tag"><b>12,480</b>farmers registered</div>
+      </div>
+    </div>
+
+    <div class="quick-access">
+      <button class="qa-btn" onclick="showPage('crops')"><span class="ic">🌱</span><span class="t">Crop Guide</span><span class="d">10 crops, seasonal tips</span></button>
+      <button class="qa-btn" onclick="showPage('schemes')"><span class="ic">🏛️</span><span class="t">Govt Schemes</span><span class="d">Search & filter by state</span></button>
+      <button class="qa-btn" onclick="showPage('consult')"><span class="ic">🎥</span><span class="t">Consultation</span><span class="d">Book a Zoom session</span></button>
+      <button class="qa-btn" onclick="showPage('farmerBuyer')"><span class="ic">🛒</span><span class="t">Farmer Buyer</span><span class="d">Pest guide & prices</span></button>
+    </div>
+
+    <div class="section-head">
+      <div>
+        <h2>Latest Agricultural News</h2>
+        <div class="sub">Automatically refreshed from trusted agriculture and government sources</div>
+        <div class="news-live-status loading" id="newsLiveStatus">
+          <span class="dot"></span><span id="newsStatusText">Checking for latest updates…</span>
+        </div>
+      </div>
+    </div>
+    <div class="news-strip" id="latestNewsList">
+      <div class="news-card">
+        <div class="date">LOADING…</div>
+        <h3>Fetching the latest agricultural updates</h3>
+        <p>The website is checking the connected trusted news feed.</p>
+      </div>
+    </div>
+    <div class="news-tools">
+      <div>
+        <b style="font-size:12px;color:var(--forest-2);">Trusted sources</b>
+        <div class="trusted-sources">
+          <a class="trusted-source" href="https://www.pib.gov.in/" target="_blank" rel="noopener noreferrer">PIB · Government of India</a>
+          <a class="trusted-source" href="https://www.icar.gov.in/en/latest-update" target="_blank" rel="noopener noreferrer">ICAR · Agriculture Research</a>
+          <a class="trusted-source" href="https://imdagrimet.gov.in/" target="_blank" rel="noopener noreferrer">IMD Agromet · Farmer Advisories</a>
+        </div>
+      </div>
+    </div>
+    <p class="news-note">News refreshes automatically when the Home page opens and every 6 hours while the page is open.</p>
+  </section>
+
+  <!-- ============ CROPS ============ -->
+  <section class="page" id="crops">
+    <div class="section-head"><div><h2>Crop Information</h2><div class="sub">Tap any crop card for season & farming tips</div></div></div>
+    <div class="toolbar">
+      <input id="cropSearch" placeholder="Search crops (e.g. Rice, Cotton)…" oninput="renderCrops()">
+      <select id="seasonFilter" onchange="renderCrops()">
+        <option value="">All seasons</option>
+        <option>Kharif</option><option>Rabi</option><option>Zaid</option>
+      </select>
+    </div>
+    <div class="crop-grid" id="cropGrid"></div>
+  </section>
+
+  <!-- ============ FARMER BUYER ============ -->
+  <section class="page" id="farmerBuyer">
+    <div class="buyer-intro">
+      <h2>🌾 Farmer Buyer</h2>
+      <p>Find crop-specific pest and disease information and compare indicative pesticide prices from different sellers. Select your crop to see common problems and products used for management.</p>
+    </div>
+    <div class="buyer-grid">
+      <div class="buyer-card">
+        <h3>🔎 Find Pest / Disease Information</h3>
+        <div class="field"><label for="buyerCrop">Select crop</label><select id="buyerCrop" onchange="renderBuyerResults()"></select></div>
+        <div class="field"><label for="buyerProblem">Search pest or disease</label><input id="buyerProblem" placeholder="e.g. bollworm, blight…" oninput="renderBuyerResults()"></div>
+      </div>
+      <div class="buyer-card">
+        <h3>💰 Compare Pesticide Prices</h3>
+        <p style="font-size:13px;color:var(--ink-soft);">Compare the indicative pack prices shown below. Always verify current price, label, registration and crop approval before purchase.</p>
+        <button class="btn btn-primary" style="margin-top:14px;" onclick="renderBuyerPrices()">Show Price Comparison</button>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:30px;"><div><h2>Crop Pest & Disease Guide</h2><div class="sub">General identification and management-product categories — follow product label and agricultural advice.</div></div></div>
+    <div class="pest-table-wrap">
+      <table class="pest-table"><thead><tr><th>Crop</th><th>Common problem</th><th>Type</th><th>Typical management product</th><th>Check before use</th></tr></thead><tbody id="buyerResults"></tbody></table>
+    </div>
+
+    <div class="section-head"><div><h2>Indicative Pesticide Price Comparison</h2><div class="sub">Example retail pack prices for demonstration; prices are not live quotes.</div></div></div>
+    <div class="price-grid" id="buyerPriceGrid"></div>
+    <div class="buyer-affiliate-box">
+      <h3>🛒 Buy Agricultural Products Online</h3>
+      <p>Compare products on Amazon and Flipkart. Affiliate links can earn AgriConnect a commission on qualifying purchases at no extra cost to the buyer.</p>
+      <div class="affiliate-actions">
+        <a id="amazonSearchLink" class="affiliate-btn amazon-btn" href="#" target="_blank" rel="noopener noreferrer">🛍️ Search on Amazon</a>
+        <a id="flipkartSearchLink" class="affiliate-btn flipkart-btn" href="#" target="_blank" rel="noopener noreferrer">🛒 Search on Flipkart</a>
+      </div>
+      <small>Affiliate disclosure: Prices, availability and eligibility may change. Always verify label registration and seller details before purchasing inputs.</small>
+    </div>
+    <div class="buyer-note">⚠️ <b>Farmer safety:</b> This page is an information and price-comparison feature, not a prescription. Use only legally registered products.</div>
+  </section>
+
+  <!-- ============ SCHEMES ============ -->
+  <section class="page" id="schemes">
+    <div class="section-head"><div><h2>Government Schemes</h2><div class="sub">Official Government of India schemes with source links and scheme periods</div></div></div>
+    <div class="toolbar">
+      <input id="schemeSearch" placeholder="Search schemes…" oninput="renderSchemes()">
+      <select id="stateFilter" onchange="renderSchemes()">
+        <option value="">All states</option>
+      </select>
+    </div>
+    <div class="scheme-list" id="schemeList"></div>
+  </section>
+
+  <!-- ============ CONSULT ============ -->
+  <section class="page" id="consult">
+    <div class="section-head"><div><h2>Farmer–Consultant Interaction</h2><div class="sub">Join a live online consultation</div></div></div>
+    <div class="consult-grid">
+      <div class="form-card">
+        <h3>Book a session</h3>
+        <form id="bookingForm" onsubmit="bookMeeting(event)">
+          <div class="field"><label>Your name</label><input required id="bkName" placeholder="e.g. Ramesh Patil"></div>
+          <div class="field"><label>Choose expert</label>
+            <select id="bkConsultant" required>
+              <option value="">Select expert</option>
+            </select>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <div class="field" style="flex:1"><label>Date</label><input type="date" id="bkDate" required></div>
+            <div class="field" style="flex:1"><label>Time</label><input type="time" id="bkTime" required></div>
+          </div>
+          <button class="btn btn-primary" style="width:100%; justify-content:center;" type="submit">Book Zoom Consultation</button>
+        </form>
+        <div class="meeting-list" id="meetingList"></div>
+      </div>
+      <div>
+        <h3 style="font-size:16px; color:var(--forest-2); margin-bottom:14px;">Available experts</h3>
+        <div class="experts" id="expertList"></div>
+      </div>
+    </div>
+    <div class="live-session-list" id="expertSessionList"></div>
+  </section>
+
+  <!-- ============ ADMIN ============ -->
+  <section class="page" id="admin">
+    <div class="section-head"><div><h2>Admin Dashboard</h2><div class="sub">Manage users, crops, schemes & news</div></div></div>
+    <div class="admin-stats">
+      <div class="stat-card"><b id="statUsers">12,481</b><span>Registered users</span></div>
+      <div class="stat-card"><b id="statCrops">10</b><span>Crops listed</span></div>
+      <div class="stat-card"><b id="statSchemes">8</b><span>Active schemes</span></div>
+      <div class="stat-card"><b id="statMeetings">0</b><span>Meetings booked</span></div>
+    </div>
+
+    <div class="admin-panel">
+      <h3>Manage Government Schemes</h3>
+      <div class="admin-add">
+        <input id="newSchemeName" placeholder="New scheme name…">
+        <input id="newSchemeState" placeholder="State (e.g. Maharashtra)" style="max-width:200px;">
+        <button onclick="addScheme()">+ Add Scheme</button>
+      </div>
+      <table>
+        <thead><tr><th>Scheme</th><th>State</th><th>Start</th><th>End</th><th>Official</th><th></th></tr></thead>
+        <tbody id="adminSchemeTable"></tbody>
+      </table>
+    </div>
+
+    <div class="admin-panel">
+      <h3>Manage Consultants</h3>
+      <div class="admin-add" style="flex-wrap:wrap;">
+        <input id="newConsultantName" placeholder="Consultant name">
+        <input id="newConsultantRole" placeholder="Specialization / role">
+        <input id="newConsultantExperience" placeholder="Experience (e.g. 8 yrs)" style="max-width:180px;">
+        <button onclick="addConsultant()">+ Add Consultant</button>
+      </div>
+      <table>
+        <thead><tr><th>Consultant</th><th>Role</th><th>Experience</th><th>Status</th><th></th></tr></thead>
+        <tbody id="adminConsultantTable"></tbody>
+      </table>
+    </div>
+
+    <div class="admin-panel">
+      <h3>Manage Online Sessions</h3>
+      <div class="admin-add" style="flex-wrap:wrap;">
+        <input id="newSessionConsultant" placeholder="Consultant name" style="min-width:170px;">
+        <input id="newSessionTopic" placeholder="Session topic" style="min-width:190px;">
+        <input id="newSessionDate" type="date" title="Session date">
+        <input id="newSessionTime" type="time" title="Session time">
+        <input id="newSessionLink" placeholder="https://zoom.us/j/..." style="min-width:280px;">
+        <button onclick="addConsultantSession()">+ Add Session</button>
+      </div>
+      <table>
+        <thead><tr><th>Consultant</th><th>Topic</th><th>Date</th><th>Time</th><th>Zoom Link</th><th></th></tr></thead>
+        <tbody id="adminSessionTable"></tbody>
+      </table>
+    </div>
+
+    <div class="admin-panel">
+      <h3>Recently Registered Users</h3>
+      <table>
+        <thead><tr><th>Name</th><th>Mobile</th><th>Registered</th><th></th></tr></thead>
+        <tbody id="adminUserTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>© 2026 AgriConnect Project — Department of Information Technology, Demo Build</span>
+    <span>Frontend: HTML/CSS/JS · Official scheme links · YouTube resources · Online consultation sessions</span>
+  </div>
+</footer>
+
+<div class="modal-bg" id="cropModalBg" onclick="if(event.target===this)closeCropModal()">
+  <div class="modal" id="cropModal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------- DATA ---------------- */
+
+const NEWS_CACHE_KEY='agriLatestNews';
+const NEWS_FEED='https://pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=1';
+const NEWS_RELAY='https://api.allorigins.win/raw?url=';
+
+const fallbackNews=[
+  {title:'Latest Government of India agriculture updates',desc:'Open the official PIB agriculture feed for the newest announcements, schemes and farmer-support updates.',date:new Date().toISOString(),source:'Press Information Bureau',url:'https://www.pib.gov.in/'},
+  {title:'Latest agricultural research updates',desc:'ICAR publishes agriculture research, technologies and institutional updates.',date:new Date().toISOString(),source:'ICAR',url:'https://www.icar.gov.in/en/latest-update'},
+  {title:'Weather-based farmer advisories',desc:'IMD Agricultural Meteorology provides weather information and agrometeorological advisories for farmers.',date:new Date().toISOString(),source:'IMD Agromet',url:'https://imdagrimet.gov.in/'}
+];
+
+function escapeNewsText(v){
+  return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+}
+function newsDate(v){
+  const d=new Date(v); if(Number.isNaN(d.getTime())) return 'RECENT';
+  return d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+}
+function isAgricultureNews(x){
+  const t=(x.title+' '+x.desc).toLowerCase();
+  return ['agriculture','farmer','farmers','kisan','crop','crops','krishi','horticulture','irrigation','fertilizer','fertiliser','seed','soil','pesticide','livestock','fisheries','pm-kisan','pm kisan','rabi','kharif','monsoon','msp','procurement','agri'].some(k=>t.includes(k));
+}
+function parsePIBRss(xmlText){
+  const xml=new DOMParser().parseFromString(xmlText,'text/xml');
+  return [...xml.querySelectorAll('item')].map(item=>({
+    title:item.querySelector('title')?.textContent?.trim()||'Agriculture update',
+    desc:(item.querySelector('description')?.textContent||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim(),
+    date:item.querySelector('pubDate')?.textContent?.trim()||new Date().toISOString(),
+    source:'Press Information Bureau',
+    url:item.querySelector('link')?.textContent?.trim()||'https://www.pib.gov.in/'
+  })).filter(isAgricultureNews).slice(0,6);
+}
+function renderLatestNews(items,fromCache){
+  const list=document.getElementById('latestNewsList'), status=document.getElementById('newsLiveStatus'), text=document.getElementById('newsStatusText');
+  if(!list) return;
+  const clean=(items&&items.length?items:fallbackNews).slice(0,3);
+  list.innerHTML=clean.map(n=>`
+    <article class="news-card">
+      <div class="date">${newsDate(n.date)} <span class="news-badge">TRUSTED SOURCE</span></div>
+      <h3>${escapeNewsText(n.title)}</h3>
+      <p>${escapeNewsText(n.desc||'Open the original source for the complete announcement.')}</p>
+      <div class="news-tools"><a class="source" href="${escapeNewsText(n.url)}" target="_blank" rel="noopener noreferrer">${escapeNewsText(n.source)} ↗</a></div>
+    </article>`).join('');
+  if(status){status.classList.remove('loading');status.querySelector('.dot').style.background='#2f7d32';}
+  if(text) text.textContent=fromCache?'Showing saved trusted updates':'Updated automatically · '+new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+}
+function loadCachedNews(){
+  try{
+    const c=JSON.parse(localStorage.getItem(NEWS_CACHE_KEY)||'null');
+    if(Array.isArray(c)&&c.length){renderLatestNews(c,true);return true;}
+  }catch(e){}
+  return false;
+}
+async function refreshLatestNews(){
+  loadCachedNews();
+  try{
+    const response=await fetch(NEWS_RELAY+encodeURIComponent(NEWS_FEED),{cache:'no-store'});
+    if(!response.ok) throw new Error('Feed unavailable');
+    const items=parsePIBRss(await response.text());
+    if(!items.length) throw new Error('No agriculture items');
+    localStorage.setItem(NEWS_CACHE_KEY,JSON.stringify(items));
+    renderLatestNews(items,false);
+  }catch(e){
+    if(!loadCachedNews()) renderLatestNews(fallbackNews,true);
+    const text=document.getElementById('newsStatusText');
+    if(text) text.textContent='Live feed unavailable · showing saved/trusted updates';
+  }
+}
+function startAutomaticNews(){
+  refreshLatestNews();
+  setInterval(refreshLatestNews,6*60*60*1000);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible') refreshLatestNews();});
+}
+
+const crops = [
+  {n:"Wheat", ic:"🌾", season:"Rabi", desc:"A staple Rabi cereal sown after monsoon, harvested in spring across North India.", tips:"Sow in well-drained loam; irrigate at crown-root stage; watch for rust in humid weeks.",
+   videos:[
+     ["Wheat cultivation — sowing & crop management","https://www.youtube.com/results?search_query=wheat+cultivation+India+agriculture"],
+     ["Wheat irrigation & fertilizer management","https://www.youtube.com/results?search_query=wheat+irrigation+fertilizer+India"],
+     ["Wheat disease management","https://www.youtube.com/results?search_query=wheat+disease+management+India"]
+   ]},
+  {n:"Rice", ic:"🌾", season:"Kharif", desc:"India's principal Kharif crop, needing standing water and warm humid conditions.", tips:"Transplant 25-day seedlings; maintain 5cm water depth; apply nitrogen in 3 split doses.",
+   videos:[
+     ["Rice puddling — ICAR-IARI field visit","https://www.youtube.com/watch?v=q7BPtHo4bqw"],
+     ["Rice cultivation techniques","https://www.youtube.com/results?search_query=rice+cultivation+India+ICAR"],
+     ["Rice pest & disease management","https://www.youtube.com/results?search_query=rice+pest+disease+management+India"]
+   ]},
+  {n:"Cotton", ic:"☁️", season:"Kharif", desc:"A long-duration cash crop grown widely in Maharashtra, Gujarat and Telangana.", tips:"Use Bt varieties in bollworm zones; maintain wide row spacing for airflow.",
+   videos:[
+     ["Cotton cultivation — agronomy lecture","https://www.youtube.com/watch?v=OZ9vktYNvOs"],
+     ["Cotton crop management","https://www.youtube.com/results?search_query=cotton+cultivation+India+agriculture"],
+     ["Cotton pest management","https://www.youtube.com/results?search_query=cotton+pest+management+India"]
+   ]},
+  {n:"Sugarcane", ic:"🎋", season:"Zaid", desc:"A 10–12 month cash crop needing deep fertile soil and heavy irrigation.", tips:"Plant setts with 2-3 buds; earth-up at 3 & 5 months to prevent lodging.",
+   videos:[
+     ["Sugarcane cultivation in India","https://www.youtube.com/results?search_query=sugarcane+cultivation+India"],
+     ["Sugarcane planting & sett management","https://www.youtube.com/results?search_query=sugarcane+planting+sett+management"],
+     ["Sugarcane irrigation management","https://www.youtube.com/results?search_query=sugarcane+irrigation+management+India"]
+   ]},
+  {n:"Maize", ic:"🌽", season:"Kharif", desc:"A versatile cereal used for food, feed and fodder, tolerant of varied soils.", tips:"Maintain plant spacing of 60x20cm; top-dress nitrogen at knee-high stage.",
+   videos:[
+     ["Maize cultivation in India","https://www.youtube.com/results?search_query=maize+cultivation+India"],
+     ["Maize fertilizer management","https://www.youtube.com/results?search_query=maize+fertilizer+management+India"],
+     ["Maize pest management","https://www.youtube.com/results?search_query=maize+pest+management+India"]
+   ]},
+  {n:"Tomato", ic:"🍅", season:"Rabi", desc:"A high-value vegetable crop grown across seasons with protected cultivation options.", tips:"Stake plants early; rotate crops to avoid wilt; monitor for fruit borer.",
+   videos:[
+     ["Tomato cultivation in India","https://www.youtube.com/results?search_query=tomato+cultivation+India"],
+     ["Tomato nursery & transplanting","https://www.youtube.com/results?search_query=tomato+nursery+transplanting+India"],
+     ["Tomato disease management","https://www.youtube.com/results?search_query=tomato+disease+management+India"]
+   ]},
+  {n:"Onion", ic:"🧅", season:"Rabi", desc:"A key commercial bulb crop, India being among the top global producers.", tips:"Cure bulbs in shade after harvest; avoid excess nitrogen near maturity.",
+   videos:[
+     ["Onion cultivation in India","https://www.youtube.com/results?search_query=onion+cultivation+India"],
+     ["Onion nursery & transplanting","https://www.youtube.com/results?search_query=onion+nursery+transplanting+India"],
+     ["Onion storage & curing","https://www.youtube.com/results?search_query=onion+curing+storage+India"]
+   ]},
+  {n:"Potato", ic:"🥔", season:"Rabi", desc:"A cool-season tuber crop, major in Uttar Pradesh, West Bengal and Punjab.", tips:"Earth-up twice; store at 2-4°C with good ventilation to prevent sprouting.",
+   videos:[
+     ["Potato cultivation in India","https://www.youtube.com/results?search_query=potato+cultivation+India"],
+     ["Potato irrigation & fertilizer","https://www.youtube.com/results?search_query=potato+irrigation+fertilizer+India"],
+     ["Potato disease management","https://www.youtube.com/results?search_query=potato+disease+management+India"]
+   ]},
+  {n:"Mango", ic:"🥭", season:"Zaid", desc:"India's 'king of fruits', an orchard crop harvested chiefly in summer.", tips:"Prune after harvest; apply paclobutrazol for regular flowering in alternate-bearing trees.",
+   videos:[
+     ["Mango orchard management","https://www.youtube.com/results?search_query=mango+orchard+management+India"],
+     ["Mango pruning & flowering","https://www.youtube.com/results?search_query=mango+pruning+flowering+India"],
+     ["Mango pest & disease management","https://www.youtube.com/results?search_query=mango+pest+disease+management+India"]
+   ]},
+  {n:"Banana", ic:"🍌", season:"Zaid", desc:"A year-round tropical fruit crop grown widely in Tamil Nadu and Maharashtra.", tips:"Maintain consistent irrigation; remove suckers except one follower for the next cycle.",
+   videos:[
+     ["Banana cultivation in India","https://www.youtube.com/results?search_query=banana+cultivation+India"],
+     ["Banana drip irrigation & fertigation","https://www.youtube.com/results?search_query=banana+drip+irrigation+fertigation+India"],
+     ["Banana disease management","https://www.youtube.com/results?search_query=banana+disease+management+India"]
+   ]}
+];
+
+const schemes = [
+  {n:"PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)", state:"All India",
+   desc:"Central Sector scheme providing ₹6,000 per year in three equal installments to eligible landholding farmer families.",
+   start:"01 Dec 2018", end:"Ongoing / no fixed end date", last:"Installment schedule varies", url:"https://pmkisan.gov.in/"},
+  {n:"Pradhan Mantri Fasal Bima Yojana (PMFBY)", state:"All India",
+   desc:"Government crop insurance scheme protecting notified crops against specified risks and crop losses.",
+   start:"18 Feb 2016", end:"Ongoing", last:"Season/state crop-calendar based", url:"https://pmfby.gov.in/"},
+  {n:"Pradhan Mantri Krishi Sinchayee Yojana (PMKSY)", state:"All India",
+   desc:"National irrigation programme focused on assured irrigation, water-use efficiency and precision irrigation.",
+   start:"01 Jul 2015", end:"Ongoing", last:"Component/state specific", url:"https://pmksy.gov.in/"},
+  {n:"Soil Health Card Scheme", state:"All India",
+   desc:"Provides farmers with soil nutrient information and recommendations for balanced fertilizer use.",
+   start:"19 Feb 2015", end:"Ongoing", last:"Cycle-based / state specific", url:"https://soilhealth.dac.gov.in/"},
+  {n:"Kisan Credit Card (KCC)", state:"All India",
+   desc:"Institutional credit facility designed to meet farmers' short-term cultivation and allied-activity credit needs.",
+   start:"1998", end:"Ongoing", last:"Bank/credit-cycle specific", url:"https://www.myscheme.gov.in/schemes/kcc"},
+  {n:"Paramparagat Krishi Vikas Yojana (PKVY)", state:"All India",
+   desc:"Supports cluster-based promotion of organic farming and certification under the National Mission for Sustainable Agriculture.",
+   start:"2015", end:"Ongoing", last:"State/component specific", url:"https://pgsindia-ncof.gov.in/"},
+  {n:"Sub-Mission on Agricultural Mechanization (SMAM)", state:"All India",
+   desc:"Supports access to agricultural machinery and farm mechanization through assistance and custom hiring arrangements.",
+   start:"2014", end:"Ongoing", last:"State/annual target specific", url:"https://agrimachinery.nic.in/"},
+  {n:"National Mission on Edible Oils – Oil Palm (NMEO-OP)", state:"Participating States",
+   desc:"Government mission supporting expansion of oil-palm cultivation and value-chain development in suitable areas.",
+   start:"2021", end:"Ongoing mission", last:"State/project specific", url:"https://nmeo.dac.gov.in/"}
+];
+
+let meetings = [];
+let expertSessions = JSON.parse(localStorage.getItem('agriConsultantSessions') || '[]');
+let experts = JSON.parse(localStorage.getItem('agriConsultants') || 'null') || [
+  {name:'Dr. Anita Sharma', role:'Soil Scientist', experience:'8 yrs', active:true},
+  {name:'Er. Vikram Rao', role:'Irrigation Engineer', experience:'12 yrs', active:true},
+  {name:'Dr. Farida Sheikh', role:'Plant Pathologist', experience:'6 yrs', active:true}
+];
+let users = [
+  {name:"Ramesh Patil", mobile:"98765xxxxx", date:"04 Aug 2026"},
+  {name:"Sunita Devi", mobile:"91234xxxxx", date:"01 Aug 2026"},
+];
+let currentUser = null;
+
+/* ---------------- NAV ---------------- */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('active', b.dataset.page===id));
+  document.getElementById('mobileNav').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+function toggleMobileNav(){
+  const m=document.getElementById('mobileNav');
+  m.style.display = m.style.display==='flex' ? 'none' : 'flex';
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+/* ---------------- CROPS ---------------- */
+function renderCrops(){
+  const q=(document.getElementById('cropSearch').value||'').toLowerCase();
+  const s=document.getElementById('seasonFilter').value;
+  const grid=document.getElementById('cropGrid');
+  grid.innerHTML='';
+  crops.filter(c=>c.n.toLowerCase().includes(q) && (!s||c.season===s)).forEach(c=>{
+    const el=document.createElement('div');
+    el.className='crop-card';
+    el.onclick=()=>openCropModal(c);
+    el.innerHTML=`<div class="crop-swatch" style="background:var(--leaf-light)">${c.ic}</div>
+      <div class="body"><h3>${c.n}</h3><span class="season-tag">${c.season}</span></div>`;
+    grid.appendChild(el);
+  });
+  if(!grid.children.length) grid.innerHTML='<p style="color:var(--ink-soft);grid-column:1/-1;">No crops match your search.</p>';
+}
+function openCropModal(c){
+  const videos = c.videos.map(v=>`
+    <div class="video-card">
+      <div class="video-thumb">▶</div>
+      <div class="video-body">
+        <b>${v[0]}</b>
+        <a href="${v[1]}" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a>
+      </div>
+    </div>`).join('');
+  document.getElementById('cropModal').innerHTML=`
+    <button class="close" onclick="closeCropModal()">✕</button>
+    <div class="swatch" style="background:var(--leaf-light)">${c.ic}</div>
+    <h3>${c.n}</h3><span class="season-tag">${c.season} season</span>
+    <p>${c.desc}</p>
+    <div class="tips"><b>Farming tips</b><p>${c.tips}</p></div>
+    <div class="crop-videos">
+      <h4>📺 Helpful YouTube Videos</h4>
+      <div class="video-grid">${videos}</div>
+      <p style="font-size:11px;color:var(--ink-soft);margin-top:10px;">
+        Videos open directly on YouTube.
+      </p>
+    </div>`;
+  document.getElementById('cropModalBg').classList.add('active');
+}
+function closeCropModal(){document.getElementById('cropModalBg').classList.remove('active');}
+
+/* ---------------- FARMER BUYER ---------------- */
+const buyerProblems=[
+  {crop:'Wheat',problem:'Aphids',type:'Insect pest',product:'Registered aphid insecticide',check:'Confirm wheat + aphid label approval'},
+  {crop:'Wheat',problem:'Rust',type:'Disease',product:'Registered fungicide for wheat rust',check:'Confirm disease and crop label'},
+  {crop:'Rice',problem:'Stem borer',type:'Insect pest',product:'Registered rice stem-borer insecticide',check:'Confirm local recommendation'},
+  {crop:'Rice',problem:'Blast',type:'Disease',product:'Registered rice blast fungicide',check:'Confirm blast diagnosis'},
+  {crop:'Cotton',problem:'Bollworm',type:'Insect pest',product:'Registered cotton bollworm product',check:'Use approved crop combination'},
+  {crop:'Cotton',problem:'Whitefly',type:'Insect pest',product:'Registered whitefly insecticide',check:'Rotate modes of action'},
+  {crop:'Maize',problem:'Fall armyworm',type:'Insect pest',product:'Registered maize fall-armyworm product',check:'Confirm infestation'},
+  {crop:'Tomato',problem:'Early blight',type:'Disease',product:'Registered tomato fungicide',check:'Confirm disease label'},
+  {crop:'Tomato',problem:'Fruit borer',type:'Insect pest',product:'Registered tomato fruit-borer product',check:'Confirm pre-harvest interval'},
+  {crop:'Onion',problem:'Thrips',type:'Insect pest',product:'Registered onion thrips product',check:'Confirm label'},
+  {crop:'Potato',problem:'Late blight',type:'Disease',product:'Registered potato late-blight fungicide',check:'Confirm label'},
+  {crop:'Mango',problem:'Mango hopper',type:'Insect pest',product:'Registered mango hopper product',check:'Confirm crop approval'},
+  {crop:'Banana',problem:'Sigatoka',type:'Disease',product:'Registered banana Sigatoka fungicide',check:'Confirm resistance management'}
+];
+const affiliateConfig = { amazonTag: "YOUR_AMAZON_ASSOCIATE_TAG", flipkartAffiliateId: "YOUR_FLIPKART_AFFILIATE_ID" };
+
+const buyerPrices=[
+  {product:'Neem-based botanical insecticide',active:'Azadirachtin-based',prices:[['Seller A','₹280 / 1 L'],['Seller B','₹315 / 1 L'],['Seller C','₹295 / 1 L']]},
+  {product:'Mancozeb fungicide',active:'Mancozeb-based',prices:[['Seller A','₹360 / 1 kg'],['Seller B','₹395 / 1 kg'],['Seller C','₹375 / 1 kg']]},
+  {product:'Emamectin benzoate',active:'Emamectin-based',prices:[['Seller A','₹185 / 100 g'],['Seller B','₹210 / 100 g'],['Seller C','₹195 / 100 g']]},
+  {product:'Imidacloprid insecticide',active:'Imidacloprid-based',prices:[['Seller A','₹240 / 250 ml'],['Seller B','₹265 / 250 ml'],['Seller C','₹250 / 250 ml']]},
+  {product:'Copper-based fungicide',active:'Copper-based',prices:[['Seller A','₹220 / 500 g'],['Seller B','₹245 / 500 g'],['Seller C','₹230 / 500 g']]},
+  {product:'Spinosad insecticide',active:'Spinosad-based',prices:[['Seller A','₹410 / 100 ml'],['Seller B','₹450 / 100 ml'],['Seller C','₹425 / 100 ml']]}
+];
+
+function initBuyer(){
+  const sel=document.getElementById('buyerCrop'); if(!sel) return;
+  sel.innerHTML='<option value="">All crops</option>'+[...new Set(buyerProblems.map(x=>x.crop))].map(c=>`<option>${c}</option>`).join('');
+  renderBuyerResults(); renderBuyerPrices();
+}
+function renderBuyerResults(){
+  updateAffiliateLinks();
+  const crop=document.getElementById('buyerCrop')?.value||'';
+  const q=(document.getElementById('buyerProblem')?.value||'').toLowerCase();
+  const rows=buyerProblems.filter(x=>(!crop||x.crop===crop) && (!q||(x.problem+' '+x.type+' '+x.product).toLowerCase().includes(q)));
+  const tb=document.getElementById('buyerResults'); if(!tb) return;
+  tb.innerHTML=rows.length?rows.map(x=>`<tr><td><b>${x.crop}</b></td><td>${x.problem}</td><td><span class="pest-tag">${x.type}</span></td><td>${x.product}</td><td>${x.check}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--ink-soft);padding:18px;">No matching pest or disease found.</td></tr>';
+}
+function updateAffiliateLinks(){
+  const crop=document.getElementById('buyerCrop')?.value||'';
+  const problem=document.getElementById('buyerProblem')?.value||'';
+  const query=encodeURIComponent((crop+' '+problem+' agricultural products pesticide').trim());
+  const amazon=document.getElementById('amazonSearchLink');
+  const flipkart=document.getElementById('flipkartSearchLink');
+  if(amazon){ const tag=affiliateConfig.amazonTag; amazon.href=tag&&!tag.startsWith('YOUR_') ? `https://www.amazon.in/s?k=${query}&tag=${encodeURIComponent(tag)}` : `https://www.amazon.in/s?k=${query}`; }
+  if(flipkart){ const aid=affiliateConfig.flipkartAffiliateId; flipkart.href=aid&&!aid.startsWith('YOUR_') ? `https://www.flipkart.com/search?q=${query}&affid=${encodeURIComponent(aid)}` : `https://www.flipkart.com/search?q=${query}`; }
+}
+function renderBuyerPrices(){
+  const grid=document.getElementById('buyerPriceGrid'); if(!grid) return;
+  grid.innerHTML=buyerPrices.map(p=>{
+    const nums=p.prices.map(x=>parseFloat(x[1].replace(/[^0-9.]/g,'')));
+    const min=Math.min(...nums);
+    return `<div class="price-card"><h4>${p.product}</h4><div class="active">${p.active}</div>${p.prices.map(x=>{const n=parseFloat(x[1].replace(/[^0-9.]/g,''));return `<div class="seller-row"><span>${x[0]}</span><b class="${n===min?'best-price':''}">${x[1]}${n===min?' · Best':''}</b></div>`}).join('')}</div>`;
+  }).join('');
+}
+
+/* ---------------- SCHEMES ---------------- */
+function populateStateFilter(){
+  const sel=document.getElementById('stateFilter');
+  [...new Set(schemes.map(s=>s.state))].forEach(st=>{
+    const o=document.createElement('option'); o.textContent=st; sel.appendChild(o);
+  });
+}
+function renderSchemes(){
+  const q=(document.getElementById('schemeSearch').value||'').toLowerCase();
+  const st=document.getElementById('stateFilter').value;
+  const list=document.getElementById('schemeList');
+  list.innerHTML='';
+  schemes.filter(s=>
+    (s.n+" "+s.desc+" "+s.state).toLowerCase().includes(q) &&
+    (!st||s.state===st)
+  ).forEach(s=>{
+    const el=document.createElement('div');
+    el.className='scheme-card';
+    el.innerHTML=`<div>
+        <h3>${s.n}</h3>
+        <p>${s.desc}</p>
+        <div class="scheme-meta">
+          <span>START: ${s.start}</span>
+          <span>END: ${s.end}</span>
+        </div>
+        <div class="scheme-actions">
+          <a class="scheme-link" href="${s.url}" target="_blank" rel="noopener noreferrer">Official Website ↗</a>
+        </div>
+      </div>
+      <span class="state-badge">${s.state}</span>`;
+    list.appendChild(el);
+  });
+  if(!list.children.length) list.innerHTML='<p style="color:var(--ink-soft);">No schemes match your search.</p>';
+  document.getElementById('statSchemes').textContent = schemes.length;
+}
+
+/* ---------------- CONSULT ---------------- */
+function bookMeeting(e){
+  e.preventDefault();
+  if(!currentUser){
+    toast('Please log in first to book a consultation.');
+    showPage('auth');
+    return;
+  }
+  const name=document.getElementById('bkName').value;
+  const expert=document.getElementById('bkConsultant').value;
+  const date=document.getElementById('bkDate').value;
+  const time=document.getElementById('bkTime').value;
+  const expertName = expert.split('—')[0].trim();
+  const matchedSession = expertSessions.find(s => s.expert === expertName && s.date === date);
+  meetings.unshift({name,expert,date,time,zoomLink: matchedSession ? matchedSession.link : ''});
+  renderMeetings();
+  document.getElementById('bookingForm').reset();
+  document.getElementById('statMeetings').textContent = meetings.length;
+  if(currentUser) renderProfile();
+  toast('Zoom consultation booked ✓');
+}
+function renderMeetings(){
+  const list=document.getElementById('meetingList');
+  if(!list) return;
+  list.innerHTML='';
+  meetings.forEach(m=>{
+    const el=document.createElement('div');
+    el.className='meeting-item';
+    const joinUrl = m.zoomLink || '';
+    el.innerHTML=`<span><b>${m.name}</b> with ${m.expert.split('—')[0]} · ${m.date||'TBD'} ${m.time||''}</span>
+      ${joinUrl
+        ? `<a class="join" href="${joinUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Join Zoom</a>`
+        : `<button class="join" onclick="toast('The admin has not added a Zoom link for this booking yet.')">Join</button>`}`;
+    list.appendChild(el);
+  });
+}
+
+function saveConsultants(){
+  localStorage.setItem('agriConsultants', JSON.stringify(experts));
+}
+
+function renderConsultants(){
+  const select=document.getElementById('bkConsultant');
+  const list=document.getElementById('expertList');
+  if(select){
+    const current=select.value;
+    select.innerHTML='<option value="">Select expert</option>';
+    experts.filter(e=>e.active).forEach(e=>{
+      const o=document.createElement('option');
+      o.value=`${e.name} — ${e.role}`;
+      o.textContent=`${e.name} — ${e.role}`;
+      select.appendChild(o);
+    });
+    if([...select.options].some(o=>o.value===current)) select.value=current;
+  }
+
+  if(list){
+    list.innerHTML='';
+    experts.filter(e=>e.active).forEach(e=>{
+      const initials=e.name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase();
+      const el=document.createElement('div');
+      el.className='expert-row';
+      el.innerHTML=`<div class="avatar">${initials}</div>
+        <div class="info"><b>${e.name}</b><span>${e.role} · ${e.experience}</span></div>`;
+      list.appendChild(el);
+    });
+  }
+}
+
+function renderAdminConsultants(){
+  const tb=document.getElementById('adminConsultantTable');
+  if(!tb) return;
+  tb.innerHTML='';
+  experts.forEach((e,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${e.name}</td><td>${e.role}</td><td>${e.experience}</td>
+      <td class="${e.active?'status-active':'status-inactive'}">${e.active?'Active':'Inactive'}</td>
+      <td class="row-actions">
+        <button class="admin-small-btn" onclick="toggleConsultant(${i})">${e.active?'Deactivate':'Activate'}</button>
+        <button class="del" onclick="deleteConsultant(${i})">Remove</button>
+      </td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function addConsultant(){
+  const name=document.getElementById('newConsultantName').value.trim();
+  const role=document.getElementById('newConsultantRole').value.trim();
+  const experience=document.getElementById('newConsultantExperience').value.trim();
+
+  if(!name||!role||!experience){
+    toast('Please fill expert name, role and experience');
+    return;
+  }
+
+  experts.push({name,role,experience,active:true});
+  saveConsultants();
+  renderConsultants();
+  renderAdminConsultants();
+
+  document.getElementById('newConsultantName').value='';
+  document.getElementById('newConsultantRole').value='';
+  document.getElementById('newConsultantExperience').value='';
+  toast('Consultant added ✓');
+}
+
+function toggleConsultant(i){
+  experts[i].active=!experts[i].active;
+  saveConsultants();
+  renderConsultants();
+  renderAdminConsultants();
+  toast(experts[i].active ? 'Consultant activated ✓' : 'Consultant deactivated');
+}
+
+function deleteConsultant(i){
+  const expertName=experts[i].name;
+  if(!confirm(`Remove ${expertName} permanently from the website?`)) return;
+
+  experts.splice(i,1);
+  saveConsultants();
+
+  expertSessions=expertSessions.filter(s=>s.expert!==expertName);
+  saveConsultantSessions();
+
+  renderConsultants();
+  renderAdminConsultants();
+  renderConsultantSessions();
+  renderAdminSessions();
+  toast('Consultant removed ✓');
+}
+
+/* ---------------- ONLINE SESSIONS ---------------- */
+function saveConsultantSessions(){
+  localStorage.setItem('agriConsultantSessions', JSON.stringify(expertSessions));
+}
+
+function renderConsultantSessions(){
+  const list=document.getElementById('expertSessionList');
+  if(!list) return;
+
+  const now=new Date();
+  const sorted=[...expertSessions]
+    .filter(s=>experts.some(e=>e.name===s.expert && e.active))
+    .sort((a,b)=>(a.date+' '+a.time).localeCompare(b.date+' '+b.time));
+
+  if(!sorted.length){
+    list.innerHTML='<div class="empty-session">No active online sessions scheduled right now.</div>';
+    return;
+  }
+
+  list.innerHTML=sorted.map(s=>{
+    return `<div class="meeting-item" style="margin-bottom:8px;">
+      <div>
+        <b>${s.topic}</b> (${s.expert})<br>
+        <span style="font-size:11px;color:var(--ink-soft);">📅 ${s.date} 🕒 ${s.time}</span>
+      </div>
+      <a class="join" href="${s.link}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Join Zoom</a>
+    </div>`;
+  }).join('');
+}
+
+function renderAdminSessions(){
+  const tb=document.getElementById('adminSessionTable');
+  if(!tb) return;
+  tb.innerHTML='';
+  expertSessions.forEach((s,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${s.expert}</td><td>${s.topic}</td><td>${s.date}</td><td>${s.time}</td>
+      <td><a href="${s.link}" target="_blank" rel="noopener noreferrer">Open ↗</a></td>
+      <td class="row-actions"><button class="del" onclick="deleteConsultantSession(${i})">Delete</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function addConsultantSession(){
+  const expert=document.getElementById('newSessionConsultant').value.trim();
+  const topic=document.getElementById('newSessionTopic').value.trim();
+  const date=document.getElementById('newSessionDate').value;
+  const time=document.getElementById('newSessionTime').value;
+  const link=document.getElementById('newSessionLink').value.trim();
+
+  if(!expert||!topic||!date||!time||!link){
+    toast('Please fill expert, topic, date, time and Zoom link');
+    return;
+  }
+  if(!experts.some(e=>e.name===expert && e.active)){
+    toast('Only an active expert can receive a new session');
+    return;
+  }
+
+  expertSessions.push({expert,topic,date,time,link});
+  saveConsultantSessions();
+  renderConsultantSessions();
+  renderAdminSessions();
+
+  document.getElementById('newSessionConsultant').value='';
+  document.getElementById('newSessionTopic').value='';
+  document.getElementById('newSessionDate').value='';
+  document.getElementById('newSessionTime').value='';
+  document.getElementById('newSessionLink').value='';
+  toast('Consultant Zoom session published ✓');
+}
+
+function deleteConsultantSession(i){
+  expertSessions.splice(i,1);
+  saveConsultantSessions();
+  renderConsultantSessions();
+  renderAdminSessions();
+  toast('Consultant session removed');
+}
+
+/* ---------------- AUTH & PERSONALISED PROFILE ---------------- */
+function setAuthTab(tab){
+  document.querySelectorAll('.auth-toggle button').forEach(b=>b.classList.remove('active'));
+  if(event&&event.target) event.target.classList.add('active');
+  document.getElementById('loginForm').classList.toggle('active', tab==='login');
+  document.getElementById('registerForm').classList.toggle('active', tab==='register');
+}
+
+function updateNavAuthLabel(){
+  const desktopTab = document.getElementById('navAuthTab');
+  const mobileTab = document.getElementById('mobileNavAuthTab');
+  const label = currentUser ? `👤 My Profile` : `Login`;
+  if(desktopTab) desktopTab.textContent = label;
+  if(mobileTab) mobileTab.textContent = label;
+}
+
+function doLogin(e){
+  e.preventDefault();
+  const id=document.getElementById('loginId').value.trim();
+  const pass=document.getElementById('loginPass').value.trim();
+  
+  if(!id || !pass){
+    toast('Please fill in mobile/email and password.');
+    return;
+  }
+
+  // Set user profile session
+  currentUser = {
+    name: id.includes('@') ? id.split('@')[0] : 'Farmer ' + id.slice(-4),
+    mobile: id.includes('@') ? '9876543210' : id,
+    email: id.includes('@') ? id : id + '@agriconnect.in',
+    role: 'Farmer'
+  };
+
+  updateNavAuthLabel();
+  renderProfile();
+  toast('Logged in successfully ✓');
+  showPage('auth');
+}
+
+function doRegister(e){
+  e.preventDefault();
+  const name=document.getElementById('regName').value.trim();
+  const mobile=document.getElementById('regMobile').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const role=document.getElementById('regRole').value;
+
+  users.unshift({name, mobile: mobile.slice(0,5)+'xxxxx', date:'Today'});
+  currentUser = { name, mobile, email, role };
+  
+  document.getElementById('statUsers').textContent = (12481 + users.length - 2).toLocaleString();
+  renderAdminUsers();
+  updateNavAuthLabel();
+  renderProfile();
+  toast('Account created & logged in ✓');
+  showPage('auth');
+}
+
+function renderProfile(){
+  if(!currentUser){
+    document.getElementById('loggedOutView').style.display='flex';
+    document.getElementById('loggedInView').style.display='none';
+    return;
+  }
+
+  document.getElementById('loggedOutView').style.display='none';
+  document.getElementById('loggedInView').style.display='block';
+
+  // Populating personalised profile elements
+  document.getElementById('pAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+  document.getElementById('pName').textContent = currentUser.name;
+  document.getElementById('pRole').textContent = currentUser.role || 'Farmer';
+  document.getElementById('pMobile').textContent = currentUser.mobile || 'Not provided';
+  document.getElementById('pEmail').textContent = currentUser.email || 'Not provided';
+
+  // Pre-fill booking name field for convenience
+  const bkNameInput = document.getElementById('bkName');
+  if(bkNameInput) bkNameInput.value = currentUser.name;
+
+  // Filter consultations booked for current user
+  const userMeetings = meetings.filter(m => m.name.toLowerCase() === currentUser.name.toLowerCase());
+  document.getElementById('pStatConsults').textContent = userMeetings.length;
+
+  const meetingsContainer = document.getElementById('pMeetingsList');
+  if(meetingsContainer){
+    if(userMeetings.length === 0){
+      meetingsContainer.innerHTML = '<p style="font-size:13px; color:var(--ink-soft);">No consultations booked yet. Use the Consultation tab to schedule an online Zoom meeting with an expert.</p>';
+    } else {
+      meetingsContainer.innerHTML = userMeetings.map(m => `
+        <div class="meeting-item">
+          <span><b>With ${m.expert.split('—')[0]}</b> · 📅 ${m.date} 🕒 ${m.time}</span>
+          ${m.zoomLink ? `<a class="join" href="${m.zoomLink}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Join Zoom</a>` : `<span style="font-size:11px;color:var(--soil);">Pending Link</span>`}
+        </div>
+      `).join('');
+    }
+  }
+}
+
+function logout(){
+  currentUser = null;
+  updateNavAuthLabel();
+  renderProfile();
+  toast('Logged out successfully');
+  showPage('auth');
+}
+
+/* ---------------- ADMIN ---------------- */
+function renderAdminSchemes(){
+  const tb=document.getElementById('adminSchemeTable');
+  if(!tb) return;
+  tb.innerHTML='';
+  schemes.forEach((s,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${s.n}</td><td>${s.state}</td><td>${s.start}</td><td>${s.end}</td>
+      <td><a href="${s.url}" target="_blank" rel="noopener noreferrer">Official ↗</a></td>
+      <td class="row-actions"><button class="del" onclick="deleteScheme(${i})">Delete</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+function addScheme(){
+  const n=document.getElementById('newSchemeName').value.trim();
+  const st=document.getElementById('newSchemeState').value.trim() || 'All India';
+  if(!n){toast('Enter a scheme name first'); return;}
+  schemes.unshift({n, state:st, desc:'Newly added scheme — description pending.', start:'TBD', end:'TBD', last:'TBD', url:'https://www.myscheme.gov.in/'});
+  document.getElementById('newSchemeName').value='';
+  document.getElementById('newSchemeState').value='';
+  renderAdminSchemes();
+  populateStateFilterRefresh();
+  renderSchemes();
+  toast('Scheme added ✓');
+}
+function deleteScheme(i){
+  schemes.splice(i,1);
+  renderAdminSchemes();
+  renderSchemes();
+  toast('Scheme removed');
+}
+function populateStateFilterRefresh(){
+  const sel=document.getElementById('stateFilter');
+  if(!sel) return;
+  const kept=sel.value;
+  sel.innerHTML='<option value="">All states</option>';
+  populateStateFilter();
+  sel.value=kept;
+}
+function renderAdminUsers(){
+  const tb=document.getElementById('adminUserTable');
+  if(!tb) return;
+  tb.innerHTML='';
+  users.forEach((u,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${u.name}</td><td>${u.mobile}</td><td>${u.date}</td>
+      <td class="row-actions"><button class="del" onclick="deleteUser(${i})">Remove</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+function deleteUser(i){ users.splice(i,1); renderAdminUsers(); toast('User removed'); }
+
+/* ---------------- INIT ---------------- */
+window.onload = function() {
+  populateStateFilter();
+  startAutomaticNews();
+  renderCrops();
+  initBuyer();
+  updateAffiliateLinks();
+  renderSchemes();
+  renderAdminSchemes();
+  renderAdminUsers();
+  renderMeetings();
+  renderConsultants();
+  renderAdminConsultants();
+  renderConsultantSessions();
+  renderAdminSessions();
+  updateNavAuthLabel();
+
+  // Landing page default is Auth/Login screen as requested
+  showPage('auth');
+};
+</script>
+
+<!-- Google Translate -->
+<script>
+function googleTranslateElementInit(){
+  new google.translate.TranslateElement({
+    pageLanguage:'en',
+    includedLanguages:'en,hi,mr,gu',
+    autoDisplay:false,
+    layout:google.translate.TranslateElement.InlineLayout.SIMPLE
+  },'google_translate_element');
+}
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
